@@ -24,6 +24,8 @@ class ScreenOverlay {
     private val mouseListener = ScreenOverlayMouseListener()
     private val mouseMotionListener = ScreenOverlayMouseMotionListener()
 
+    private val bloc = ScreenOverlayBLoC(::refresh)
+
     private val window = object : Window(null) {
         override fun paint(g: Graphics) {
             super.paint(g)
@@ -44,8 +46,14 @@ class ScreenOverlay {
         window.background = DISABLE_COLOR
     }
 
+    private fun refresh() {
+        window.background = ENABLE_COLOR
+    }
+
     private fun initialize(g: Graphics2D) {
         if (!initialized) {
+
+            startRefreshLoop()
 
             window.addMouseListener(mouseListener)
             window.addMouseMotionListener(mouseMotionListener)
@@ -55,11 +63,25 @@ class ScreenOverlay {
 
         if (lastInitialized < layers.size) {
             for(i in lastInitialized until layers.size) {
-                layers[i].initialize(window, g)
+                layers[i].initialize(window, bloc, g)
                 mouseListener.addListener(layers[i].mouseListener)
                 mouseMotionListener.addListener(layers[i].mouseMotionListener)
             }
+            lastInitialized = layers.size
         }
+    }
+
+    private fun startRefreshLoop() {
+        Thread {
+            while (true) {
+                Thread.sleep(25)
+                if (bloc.state.get() == 1) {
+                    SwingUtilities.invokeLater {
+                        window.background = ENABLE_COLOR
+                    }
+                }
+            }
+        }.start()
     }
 
     init {

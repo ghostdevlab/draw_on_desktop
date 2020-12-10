@@ -6,7 +6,7 @@ import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
 
 interface ScreenLayer {
-    fun initialize(window: Window, g: Graphics2D)
+    fun initialize(window: Window, bloc: ScreenOverlayBLoC, g: Graphics2D)
     fun draw(g: Graphics2D)
 
     val mouseListener : MouseListener?

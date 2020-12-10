@@ -15,6 +15,7 @@ class ScreenOverlayMouseListener : MouseListener {
     }
 
     override fun mouseClicked(e: MouseEvent?) {
+        println("E: " +e + " " + listeners.size)
         e?.let { event -> listeners.forEach { it.mouseClicked(event) } }
     }
 
