@@ -47,6 +47,8 @@ class UiLayer : ScreenLayer {
         startToggle[bloc.state.get()].draw(g)
 
         paths.forEach { it.draw(g) }
+
+        paths.removeAll { !it.alive }
     }
 
     override val mouseListener: MouseListener? = object : MouseListener {
